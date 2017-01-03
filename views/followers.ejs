@@ -1,0 +1,35 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+        ul          { list-style-type: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> <%= screen_name %>'s Followers</h1>
+    </div>
+
+    <div class="row">
+
+        <!-- TWITTER INFORMATION -->
+        <div class="col-lg-12">
+          <ul>
+            <% for(var i = 0; i < followers.length; i++) { %>
+              <li><%= followers[i]['screen_name'] %></li>
+            <% } %>
+          </ul>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

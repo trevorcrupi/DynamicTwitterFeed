@@ -1,0 +1,118 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body           { padding-top:80px; word-wrap:break-word; }
+        ul             { list-style-type: none; }
+        .like          { cursor: pointer; }
+        .retweet       { cursor: pointer; }
+        .tweetbox      { padding-top: 75px; padding-bottom: 75px; }
+        #tweetTextArea { width: 100%; height: 150px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+
+    <div class="row">
+
+        <!-- TWITTER INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
+
+                    <p>
+                        <strong>id</strong>: <%= user.twitter.id %><br>
+                        <strong>token</strong>: <%= user.twitter.token %><br>
+                        <strong>username</strong>: <%= user.twitter.username %><br>
+                        <strong>displayName</strong>: <%= user.twitter.displayName %><br />
+                        <strong>Feed Type</strong>: <%= type %>
+                    </p>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+
+      <div class="col-md-12">
+        <ul>
+          <li class="tweetbox">
+            <form id="submitTweet" method="POST">
+              Tweet Here
+              <textarea id="tweetTextArea"></textarea>
+              <input type="submit" class="btn btn-primary" />
+            </form>
+          </li>
+        <% for(var i = 0; i < 20; i++) { %>
+          <% if(timeline[i] !== undefined) { %>
+            <li>
+              <div class="well">
+                <small><%= timeline[i].user.screen_name %></small>
+                <br>
+                <h3><%= timeline[i]["text"] %></h3>
+                <a class="like" data-id="<%= timeline[i]['id_str'] %>" href="/like"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                <a class="retweet" data-id="<%= timeline[i]['id_str'] %>" href="/retweet %>"><i class="fa fa-retweet" aria-hidden="true"></i></a>
+              </div>
+            </li>
+          <% } %>
+        <% } %>
+      </ul>
+      <ul>
+        <% for(var i = 0; i < likes.length; i++) { %>
+            <li><%= likes[i]["tweeter_id"] %></li>
+        <% } %>
+      </ul>
+      </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+
+$('.like').on('click', function(e) {
+  e.preventDefault();
+  var id = $(this).attr('data-id');
+  $.ajax({
+    type: "POST",
+    url: '/like',
+    data: {'id': id}
+  });
+});
+
+$('.retweet').on('click', function(e) {
+  e.preventDefault();
+  var id = $(this).attr('data-id');
+  $.ajax({
+    type: "POST",
+    url: '/retweet',
+    data: {'id': id}
+  });
+});
+
+$('#submitTweet').on('submit', function(e) {
+  e.preventDefault();
+  var status = $("#tweetTextArea").val();
+  $.ajax({
+    type: "POST",
+    url: '/tweet',
+    data: {'status': status}
+  });
+$("#tweetTextArea").val('');
+});
+
+</script>
+
+</body>
+</html>
